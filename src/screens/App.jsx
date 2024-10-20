@@ -1,105 +1,119 @@
-//import { useState } from 'react'
-//import reactLogo from './assets/react.svg'
-//import viteLogo from '/vite.svg'
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import './App.css';
+import React, { useState } from 'react';
 
-const OrdenesPendientes = () => {
-  const [ordenes, setOrdenes] = useState([]);
-  const [loading, setLoading] = useState(true); // Para manejar el estado de carga
-  const [error, setError] = useState(null); // Para manejar errores
-  const [successMessage, setSuccessMessage] = useState(''); // Para mensajes de éxito
+const RegistroCliente = () => {
+  const [email, setEmail] = useState('');
+  const [nombre, setNombre] = useState('');
+  const [telefono, setTelefono] = useState('');
+  const [clave, setClave] = useState('');
+  const [error, setError] = useState('');
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  useEffect(() => {
-    // Función para obtener las órdenes pendientes desde el servidor
-    const fetchOrdenes = async () => {
-      try {
-        setLoading(true); // Empieza cargando
-        const response = await axios.get('http://localhost:8080/api/ordenes'); 
-        console.log("Ordenes recibidas:", response.data)
-        setOrdenes(response.data);
-      } catch (error) {
-        console.error("Error en la llamada a la API:", error)
-        setError('Error al obtener las órdenes.');
-      } finally {
-        setLoading(false); // Finaliza la carga
-      }
+    const nuevoCliente = {
+      email: email,
+      nombre: nombre,
+      telefono: telefono,
+      clave: clave,
     };
 
-    fetchOrdenes(); // Llamar la función al montar el componente
-  }, []);
-
-  const prepararOrden = async (id) => {
-    // Llamada API para preparar la orden
     try {
-      await axios.put(`http://localhost:8080/api/ordenes/${id}`, { estado: 'preparado' });
-      setSuccessMessage(`Orden ${id} preparada exitosamente.`);
-      setOrdenes(ordenes.filter((orden) => orden.id !== id)); // Filtra la orden preparada
-    } catch (error) {
-      setError('Error al preparar la orden.');
+      const response = await fetch('http://localhost:8080/api/clientes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(nuevoCliente),
+
+      
+        
+      });
+      console.log(response);
+      console.log(JSON.stringify(nuevoCliente));
+
+      if (response.ok) {
+        alert('Cliente registrado exitosamente');
+        setEmail('');
+        setNombre('');
+        setTelefono('');
+        setClave('');
+      } else {
+        setError('Error al registrar cliente');
+      }
+    } catch (err) {
+      console.error(err);
+      setError('Error de red');
     }
   };
-
-  const descartarOrden = async (id) => {
-    // Llamada API para descartar la orden
-    try {
-      await axios.delete(`http://localhost:8080/api/ordenes/${id}`);
-      setSuccessMessage(`Orden ${id} descartada.`);
-      setOrdenes(ordenes.filter((orden) => orden.id !== id)); // Filtra la orden descartada
-    } catch (error) {
-      setError('Error al descartar la orden.');
-    }
-  };
-
-  const limpiarMensajes = () => {
-    setError(null);
-    setSuccessMessage('');
-  };
-
-  if (loading) {
-    return <div className="loading">Cargando órdenes...</div>;
-  }
 
   return (
-    <div className="ordenes-pendientes-container">
-      <h2>Mis órdenes pendientes</h2>
-      <a href="/historial" className="historial-link">Ver historial</a>
-
-      {/* Mostrar mensajes de éxito o error */}
-      {error && (
-        <div className="error-message">
-          {error} <button onClick={limpiarMensajes}>Cerrar</button>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#d3d3d3' }}>
+      <form onSubmit={handleSubmit} style={{ padding: '20px', borderRadius: '8px', backgroundColor: '#fff', boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)' }}>
+        <h2>Registro Cliente</h2>
+        <div style={{ marginBottom: '10px' }}>
+          <input 
+            type="email" 
+            placeholder="Correo Electrónico" 
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            style={inputStyle}
+          />
         </div>
-      )}
-      {successMessage && (
-        <div className="success-message">
-          {successMessage} <button onClick={limpiarMensajes}>Cerrar</button>
+        <div style={{ marginBottom: '10px' }}>
+          <input 
+            type="text" 
+            placeholder="Nombre y Apellidos" 
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+            required
+            style={inputStyle}
+          />
         </div>
-      )}
-
-      {/* Si no hay órdenes */}
-      {ordenes.length === 0 ? (
-        <p>No hay órdenes pendientes.</p>
-      ) : (
-        <div className="ordenes-container">
-          {ordenes.map((orden) => (
-            <div key={orden.id} className="orden-card">
-              <div className="orden-detalle">
-                <p><strong>{orden.descripcion}</strong></p>
-                <p>Pedido hace {orden.tiempoDesdePedido} minutos</p>
-                <p>Estado: <strong>{orden.estado}</strong></p> {/* Estado de la orden */}
-              </div>
-              <div className="orden-actions">
-                <button className="btn-preparar" onClick={() => prepararOrden(orden.id)}>Preparar</button>
-                <button className="btn-descartar" onClick={() => descartarOrden(orden.id)}>Descartar</button>
-              </div>
-            </div>
-          ))}
+        <div style={{ marginBottom: '10px' }}>
+          <input 
+            type="tel" 
+            placeholder="Teléfono" 
+            value={telefono}
+            onChange={(e) => setTelefono(e.target.value)}
+            required
+            style={inputStyle}
+          />
         </div>
-      )}
+        <div style={{ marginBottom: '10px' }}>
+          <input 
+            type="password" 
+            placeholder="Clave" 
+            value={clave}
+            onChange={(e) => setClave(e.target.value)}
+            required
+            style={inputStyle}
+          />
+        </div>
+        <button type="submit" style={buttonStyle}>Registrarse</button>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+      </form>
     </div>
   );
 };
 
-export default OrdenesPendientes;
+const inputStyle = {
+  width: '100%',
+  padding: '10px',
+  borderRadius: '4px',
+  border: '1px solid #ccc',
+  fontSize: '16px',
+};
+
+const buttonStyle = {
+  width: '100%',
+  padding: '10px',
+  backgroundColor: '#00cccc',
+  color: 'white',
+  border: 'none',
+  borderRadius: '4px',
+  cursor: 'pointer',
+  fontSize: '16px',
+};
+
+export default RegistroCliente;
