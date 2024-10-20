@@ -1,51 +1,75 @@
-import { Link } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import './Vista2.css'; // Importamos el archivo de estilos específico para el cocinero
+import './Vista2.css'; // Asegúrate de tener estilos personalizados
 
-const CocineroDashboard = () => {
-  // Estado para almacenar los datos del cocinero
-  const [cocineroData, setCocineroData] = useState({
-    platillosPreparados: 0,
-    tiempoPromedioPreparacion: 0,
-    horasTrabajadas: 0,
-  });
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [clave, setClave] = useState('');
+  const [rememberMe, setRememberMe] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  // Utilizamos useEffect para cargar los datos del cocinero cuando el componente se monta
-  useEffect(() => {
-    // Fetch de los datos del cocinero desde una orden específica (cambiar el ID si es necesario)
-    axios.get('http://localhost:8080/api/ordenes/1')
-      .then(response => {
-        const orden = response.data;
-        setCocineroData({
-          platillosPreparados: orden.cantidadPlatillos || 0, // Suponiendo que el modelo Orden tiene este campo
-          tiempoPromedioPreparacion: orden.tiempoPromedioPreparacion || 0,
-          horasTrabajadas: orden.horasTrabajadas || 0,
-        });
-      })
-      .catch(error => console.error('Error fetching cocinero data:', error));
-  }, []);
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      // Realiza la llamada al backend para autenticar al usuario
+      const response = await axios.post('http://localhost:8080/api/clientes/login', {
+        email,
+        clave,
+      });
+
+      if (response.data) {
+        // Guarda el token o los detalles del usuario según la respuesta del backend
+        console.log('Login successful', response.data);
+      }
+    } catch (error) {
+      setErrorMessage('Invalid email or password');
+      console.error('Error during login', error);
+    }
+  };
 
   return (
-    <div className="cocinero-dashboard-container">
-      <h2>Cocinero</h2>
-      <div className="data-card">
-        <div className="data-row">
-          <p>Cantidad de platillos preparados:</p>
-          <span className="data-value">{cocineroData.platillosPreparados}</span>
+    <div className="login-container">
+      <form className="login-form" onSubmit={handleLogin}>
+        <h2>Login</h2>
+        <div className="input-group">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
         </div>
-        <div className="data-row">
-          <p>Tiempo promedio de preparación:</p>
-          <span className="data-value">{cocineroData.tiempoPromedioPreparacion} min</span>
+        <div className="input-group">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            value={clave}
+            onChange={(e) => setClave(e.target.value)}
+            required
+          />
         </div>
-        <div className="data-row">
-          <p>Horas trabajadas en el día:</p>
-          <span className="data-value">{cocineroData.horasTrabajadas} horas</span>
+        <div className="extra-options">
+          <label>
+            <input
+              type="checkbox"
+              checked={rememberMe}
+              onChange={(e) => setRememberMe(e.target.checked)}
+            />
+            Remember Me
+          </label>
+          <a href="/forgot-password">Forgot Password?</a>
         </div>
-      </div>
+        {errorMessage && <p className="error">{errorMessage}</p>}
+        <button type="submit">Login</button>
+        <p>
+          Don't have an account? <a href="/register">Register</a>
+        </p>
+      </form>
     </div>
   );
 };
 
-export default CocineroDashboard;
-
+export default Login;
