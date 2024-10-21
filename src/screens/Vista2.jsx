@@ -1,51 +1,291 @@
-import { Link } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './Vista2.css'; // Importamos el archivo de estilos específico para el cocinero
+import './Vista2.css';
 
-const CocineroDashboard = () => {
-  // Estado para almacenar los datos del cocinero
-  const [cocineroData, setCocineroData] = useState({
-    platillosPreparados: 0,
-    tiempoPromedioPreparacion: 0,
-    horasTrabajadas: 0,
-  });
+const Vista2 = () => {
+  const [mozos, setMozos] = useState([]); // Lista de mozos
+  const [reporte, setReporte] = useState(null); // Reporte a mostrar
+  const [selectedMozo, setSelectedMozo] = useState(''); // Mozo seleccionado
+  const [currentView, setCurrentView] = useState(''); // Vista actual
+  const [loading, setLoading] = useState(false); // Estado de carga
+  const [error, setError] = useState(null); // Estado de error
+  const [categoria, setCategoria] = useState(''); // Categoría seleccionada
+  const [fechaInicio, setFechaInicio] = useState(''); // Fecha de inicio
+  const [fechaFin, setFechaFin] = useState(''); // Fecha de fin
 
-  // Utilizamos useEffect para cargar los datos del cocinero cuando el componente se monta
   useEffect(() => {
-    // Fetch de los datos del cocinero desde una orden específica (cambiar el ID si es necesario)
-    axios.get('http://localhost:8080/api/ordenes/1')
-      .then(response => {
-        const orden = response.data;
-        setCocineroData({
-          platillosPreparados: orden.cantidadPlatillos || 0, // Suponiendo que el modelo Orden tiene este campo
-          tiempoPromedioPreparacion: orden.tiempoPromedioPreparacion || 0,
-          horasTrabajadas: orden.horasTrabajadas || 0,
-        });
-      })
-      .catch(error => console.error('Error fetching cocinero data:', error));
+    // Obtener la lista de mozos
+    const fetchMozos = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/api/mozos');
+        setMozos(response.data);
+      } catch (error) {
+        console.error('Error al obtener la lista de mozos:', error);
+        setError('Error al obtener la lista de mozos.');
+      }
+    };
+
+    fetchMozos();
   }, []);
 
-  return (
-    <div className="cocinero-dashboard-container">
-      <h2>Cocinero</h2>
-      <div className="data-card">
-        <div className="data-row">
-          <p>Cantidad de platillos preparados:</p>
-          <span className="data-value">{cocineroData.platillosPreparados}</span>
-        </div>
-        <div className="data-row">
-          <p>Tiempo promedio de preparación:</p>
-          <span className="data-value">{cocineroData.tiempoPromedioPreparacion} min</span>
-        </div>
-        <div className="data-row">
-          <p>Horas trabajadas en el día:</p>
-          <span className="data-value">{cocineroData.horasTrabajadas} horas</span>
-        </div>
+  const fetchReporte = async () => {
+    setLoading(true);
+    setError(null);
+
+    // Validaciones para el reporte de platos
+    if (currentView === 'platos') {
+      if (!categoria) {
+        setError('Por favor, selecciona una categoría.');
+        setLoading(false);
+        return;
+      }
+
+      if (!fechaInicio || !fechaFin) {
+        setError('Por favor, selecciona una fecha de inicio y una fecha de fin.');
+        setLoading(false);
+        return;
+      }
+
+      if (new Date(fechaFin) < new Date(fechaInicio)) {
+        setError('La fecha de fin debe ser mayor o igual a la fecha de inicio.');
+        setLoading(false);
+        return;
+      }
+    }
+
+    try {
+      const response = await axios.get('http://localhost:8080/api/ordenes/platillos/categoria', {
+        params: {
+          fechaInicio,
+          fechaFin,
+          categoria,
+        },
+      });
+      setReporte(response.data);
+    } catch (error) {
+      console.error('Error al obtener el reporte:', error);
+      setError('Error al obtener el reporte.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerIndividualMozo = () => {
+    // Validación para verificar que se haya seleccionado un mozo
+    if (!selectedMozo) {
+      setError('Por favor, selecciona un mozo.');
+      setLoading(false);
+      return;
+    }
+
+    // Restablecer el reporte y el error
+    setReporte(null);
+    setError(null);
+
+    setCurrentView('individual'); // Cambia a la vista individual
+
+    // Ajustar la lógica aquí para obtener el reporte individual
+    fetchReporteIndividual();
+  };
+
+  const fetchReporteIndividual = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get(`http://localhost:8080/api/mozos/${selectedMozo}`);
+      setReporte(response.data);
+    } catch (error) {
+      console.error('Error al obtener el reporte del mozo:', error);
+      setError('Error al obtener el reporte del mozo.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleReportePlatos = () => {
+    // Restablecer el reporte y el error
+    setReporte(null);
+    setError(null);
+
+    setCurrentView('platos'); // Cambia a la vista de platos
+    fetchReporte(); // Obtener el reporte de platos con filtros
+  };
+
+  const handleReporteClientes = () => {
+    // Restablecer el reporte y el error
+    setReporte(null);
+    setError(null);
+
+    setCurrentView('clientes'); // Cambia a la vista de clientes
+    fetchReporteClientes(); // Obtener el reporte de clientes
+  };
+
+  const fetchReporteClientes = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get('http://localhost:8080/api/clientes');
+      setReporte(response.data);
+    } catch (error) {
+      console.error('Error al obtener el reporte de clientes:', error);
+      setError('Error al obtener el reporte de clientes.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleReporteVentas = () => {
+    // Restablecer el reporte y el error
+    setReporte(null);
+    setError(null);
+
+    setCurrentView('ventas'); // Cambia a la vista de ventas
+    fetchReporteVentas(); // Obtener el reporte de ventas
+  };
+
+  const fetchReporteVentas = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get('http://localhost:8080/api/pagos');
+      setReporte(response.data);
+    } catch (error) {
+      console.error('Error al obtener el reporte de ventas:', error);
+      setError('Error al obtener el reporte de ventas.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const renderReporte = () => {
+    if (!reporte) return <p>Selecciona un reporte para ver los datos.</p>;
+
+    return (
+      <div className="dashboard">
+        {currentView === 'individual' && (
+          <div className="card">
+            <h3>Reporte Individual de Mozo</h3>
+            <p>Nombre: {reporte.nombre}</p>
+            <p>ID: {reporte.id}</p>
+            {/* Aquí puedes agregar más detalles del reporte individual */}
+          </div>
+        )}
+        {currentView === 'platos' && (
+          <div className="card">
+            <h3>Platos Más Vendidos - {reporte.nombreCategoria}</h3>
+            <ul>
+              {reporte.platillos.map((plato, index) => (
+                <li key={index} className="plato-item">
+                  <strong>{plato.nombrePlatillo}</strong>: {plato.cantidadPedidos} pedidos
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {currentView === 'clientes' && (
+          <div className="card">
+            <h3>Clientes</h3>
+            {reporte.map((cliente) => (
+              <div key={cliente.id}>
+                <p>Nombre: {cliente.nombre}</p>
+                <p>Email: {cliente.email}</p>
+              </div>
+            ))}
+          </div>
+        )}
+        {currentView === 'ventas' && (
+          <div className="card">
+            <h3>Ventas</h3>
+            {reporte.map((venta) => (
+              <div key={venta.id}>
+                <p>ID Venta: {venta.id}</p>
+                <p>Monto: {venta.monto}</p>
+                <p>Fecha: {venta.fecha}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
+    );
+  };
+
+  return (
+    <div className="reportes-container">
+      <h2>Reportes de Mozos, Platos, Clientes y Ventas</h2>
+
+      <div className="selector-mozo-container">
+        <label htmlFor="mozo-select">Seleccionar Mozo:</label>
+        <select
+          id="mozo-select"
+          value={selectedMozo}
+          onChange={(e) => setSelectedMozo(e.target.value)}
+          disabled={loading}
+        >
+          <option value="">Seleccionar Mozo</option>
+          {mozos.map((mozo) => (
+            <option key={mozo.id} value={mozo.id}>
+              {mozo.nombre}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="botones-container">
+        <button type="button" className="btn" onClick={handleVerIndividualMozo} disabled={!selectedMozo || loading}>
+          <strong>Ver reporte de Mozo</strong>
+        </button>
+
+        <button type="button" className="btn" onClick={handleReportePlatos} disabled={loading}>
+          <strong>Ver reporte de Platos</strong>
+        </button>
+
+        <button type="button" className="btn" onClick={handleReporteClientes} disabled={loading}>
+          <strong>Ver reporte de Clientes</strong>
+        </button>
+
+        <button type="button" className="btn" onClick={handleReporteVentas} disabled={loading}>
+          <strong>Ver reporte de Ventas</strong>
+        </button>
+      </div>
+
+      {/* Formulario para Filtrar por Categoria y Fecha */}
+      {currentView === 'platos' && (
+        <div className="filter-container">
+          <h3>Filtrar por Categoría y Fecha</h3>
+          <select onChange={(e) => setCategoria(e.target.value)} value={categoria}>
+            <option value="">Seleccionar Categoría</option>
+            <option value="Sopa">Sopa</option>
+            <option value="Segundo">Segundo</option>
+            <option value="Postre">Postre</option>
+            <option value="Ensalada">Ensalada</option>
+            <option value="Bebida">Bebida</option>
+          </select>
+          <div className="date-filters">
+            <label htmlFor="fecha-inicio">Selecciona Fecha de Inicio:</label>
+            <input 
+              id="fecha-inicio"
+              type="date" 
+              value={fechaInicio} 
+              onChange={(e) => setFechaInicio(e.target.value)} 
+            />
+            <label htmlFor="fecha-fin">Selecciona Fecha de Fin:</label>
+            <input 
+              id="fecha-fin"
+              type="date" 
+              value={fechaFin} 
+              onChange={(e) => setFechaFin(e.target.value)} 
+            />
+          </div>
+          <button onClick={handleReportePlatos}>Aplicar Filtros</button>
+        </div>
+      )}
+
+      {loading && <p>Cargando...</p>}
+      {error && <p className="error-message">{error}</p>}
+
+      {renderReporte()}
     </div>
   );
 };
 
-export default CocineroDashboard;
-
+export default Vista2;

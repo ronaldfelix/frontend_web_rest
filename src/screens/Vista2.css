@@ -1,91 +1,122 @@
-/* CocineroDashboard.css */
-.cocinero-dashboard-container {
-    background-color: #f5f5f5;
-    border: 2px solid #ccc;
-    border-radius: 10px;
-    padding: 20px;
-    width: 300px;
-    text-align: center;
-    margin: 20px auto;
-  }
-  
-  h2 {
-    color: #333;
-    font-family: 'Arial', sans-serif;
-  }
-  
-  .data-card {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .data-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 8px 0;
-  }
-  
-  p {
-    margin: 0;
-    font-weight: bold;
-    color: #666;
-  }
-  
-  .data-value {
-    background-color: #4CAF50;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-weight: bold;
-  }
-  /* CocineroDashboard.css */
-.cocinero-dashboard-container {
-    background-color: #f5f5f5;
-    border: 2px solid #ccc;
-    border-radius: 10px;
-    padding: 20px;
-    width: 300px;
-    text-align: center;
-    margin: 20px auto;
-  }
-  
-  h2 {
-    color: #333;
-    font-family: 'Arial', sans-serif;
-  }
-  
-  .data-card {
-    margin-top: 10px;
-    padding: 10px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  }
-  
-  .data-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 8px 0;
-  }
-  
-  p {
-    margin: 0;
-    font-weight: bold;
-    color: #666;
-  }
-  
-  .data-value {
-    background-color: #4CAF50;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-weight: bold;
-  }
-  
+body {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: url('src/assets/PARDOS.jpg') no-repeat center fixed;
+  background-size: cover; /* Para que la imagen cubra todo el contenedor */
+  background-color: rgb(255, 255, 255, 0.5); /* Agrega un color de fondo blanco semitransparente */
+}
+
+.reportes-container {
+  background: rgba(255, 255, 255, 0.514); /* Fondo blanco con algo de transparencia */
+  border-radius: 8px;
+  padding: 20px;
+  width: 90%;
+  max-width: 900px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: black;
+}
+
+.botones-container {
+  display: flex;
+  flex-wrap: wrap; /* Permitir que los botones se ajusten en múltiples líneas */
+  justify-content: center; /* Centramos los botones */
+  gap: 20px; /* Espacio entre los botones */
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+button {
+  padding: 17px 40px;
+  border-radius: 50px;
+  cursor: pointer;
+  border: 0;
+  background-color: white;
+  box-shadow: rgb(0 0 0 / 5%) 0 0 8px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-size: 15px;
+  transition: all 0.5s ease;
+}
+
+button:hover {
+  letter-spacing: 3px;
+  background-color: hsl(261deg 80% 48%);
+  color: hsl(0, 0%, 100%);
+  box-shadow: rgb(93 24 220) 0px 7px 29px 0px;
+}
+button:active {
+  letter-spacing: 3px;
+  background-color: hsl(261deg 80% 48%);
+  color: hsl(0, 0%, 100%);
+  box-shadow: rgb(93 24 220) 0px 0px 0px 0px;
+  transform: translateY(10px);
+  transition: 100ms;
+}
+
+select {
+  padding: 10px;
+  border-radius: 4px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.error-message {
+  color: red;
+}
+
+.reporte {
+  margin-top: 20px;
+  text-align: left;
+  width: 100%;
+  max-width: 600px;
+}
+
+.reporte pre {
+  background: #f4f4f4;
+  padding: 10px;
+  border-radius: 4px;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.filter-container {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px; /* Espacio entre los elementos del formulario */
+}
+.selector-mozo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.selector-mozo-container label {
+  margin-right: 10px;
+}
+
+.date-filters {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.date-filters label {
+  margin-right: 10px;
+  margin-left: 15px; /* Espacio entre la etiqueta y el campo */
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
+}
+
