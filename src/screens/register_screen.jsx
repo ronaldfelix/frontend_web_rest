@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 import './register_screen.css';
 
 const RegistroCliente = () => {
@@ -7,6 +8,8 @@ const RegistroCliente = () => {
   const [telefono, setTelefono] = useState('');
   const [clave, setClave] = useState('');
   const [error, setError] = useState('');
+
+  const navigate = useNavigate();  // Aquí estamos usando useNavigate correctamente
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,6 +36,7 @@ const RegistroCliente = () => {
         setNombre('');
         setTelefono('');
         setClave('');
+        navigate('/')
       } else {
         setError('Error al registrar cliente');
       }

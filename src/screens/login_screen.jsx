@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Importamos useNavigate
 import './login_screen.css'; // Asegúrate de tener estilos personalizados
 
 const Login = () => {
@@ -7,6 +8,8 @@ const Login = () => {
   const [clave, setClave] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -20,6 +23,7 @@ const Login = () => {
       if (response.data) {
         // Guarda el token o los detalles del usuario según la respuesta del backend
         console.log('Login successful', response.data);
+        navigate('/main')
       }
     } catch (error) {
       setErrorMessage('Email o clave incorrectos');

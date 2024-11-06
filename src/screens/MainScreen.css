@@ -11,12 +11,12 @@ body {
 }
 
 .reportes-container {
-  background: rgba(255, 255, 255, 0.514); /* Fondo blanco con algo de transparencia */
-  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.8); /* Fondo blanco con algo de transparencia */
+  border-radius: 10px;
   padding: 20px;
   width: 90%;
   max-width: 900px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -26,7 +26,6 @@ body {
 .botones-container {
   display: flex;
   justify-content: center;/* Centramos los botones */
-  align-items: center;
   flex-wrap: wrap; /* Permitir que los botones se ajusten en múltiples líneas */
   gap: 20px; /* Espacio entre los botones */
   width: 100%;
@@ -34,31 +33,25 @@ body {
 }
 
 button {
-  padding: 17px 40px;
+  width: 48%;
+  padding: 15px;
   border-radius: 50px;
   cursor: pointer;
   border: 0;
   background-color: black;
-  box-shadow: rgb(0 0 0 / 5%) 0 0 8px;
   letter-spacing: 1.5px;
+  color: white;
   text-transform: uppercase;
   font-size: 15px;
-  transition: all 0.5s ease;
+  transition: all 0.3s ease;
 }
 
 button:hover {
-  letter-spacing: 3px;
-  background-color: hsl(261deg 80% 48%);
-  color: hsl(0, 0%, 100%);
-  box-shadow: rgb(93 24 220) 0px 7px 29px 0px;
+  background-color:  hsl(261deg 80% 48%);
+  box-shadow: 0px 5px 10px rgba(90, 0, 179, 0.3);/*rgb(93 24 220) 0px 7px 29px 0px;*/
 }
 button:active {
-  letter-spacing: 3px;
-  background-color: hsl(261deg 80% 48%);
-  color: hsl(0, 0%, 100%);
-  box-shadow: rgb(93 24 220) 0px 0px 0px 0px;
   transform: translateY(10px);
-  transition: 100ms;
 }
 
 select {
@@ -88,12 +81,28 @@ select {
 }
 
 .filter-container {
-  margin-top: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px; /* Espacio entre los elementos del formulario */
+  gap: 5px; /* Espacio entre los elementos del formulario */
 }
+
+.filter-container select {
+  border-radius: 50px;
+  padding: 8px 16px; /* Añade algo de espacio interno para un mejor aspecto */
+  border: 1px solid #ccc; /* Borde suave */
+  font-size: 14px; /* Tamaño de fuente más pequeño para una apariencia refinada */
+  outline: none; /* Quita el borde de enfoque predeterminado */
+  transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Suaviza las transiciones */
+  background-color: black; /* Fondo ligero */
+  color: white; /* Color de texto */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra ligera */
+}
+
+.filter-container select:hover {
+  border-color: #999; /* Cambia el color del borde al pasar el mouse */
+}
+
 .selector-mozo-container {
   display: flex;
   align-items: center;
@@ -107,8 +116,8 @@ select {
 
 .date-filters {
   display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* Estilos específicos para el botón "Aplicar Filtros" */
@@ -116,11 +125,13 @@ select {
   background-color: #28a745; /* Cambia este color por el que prefieras */
   color: white;
   font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 50px;
+  margin-top: 10px;
 }
 
 .btn-aplicar-filtros:hover {
   background-color: #218838; /* Color cuando el mouse está encima */
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Sombra suave */
 }
 
 .btn-aplicar-filtros:active {
@@ -130,6 +141,7 @@ select {
 
 .date-filters label {
   margin-right: 10px;
+  flex-wrap: wrap;
   margin-left: 15px; /* Espacio entre la etiqueta y el campo */
 }
 
@@ -137,4 +149,41 @@ select {
   color: red;
   margin-top: 10px;
 }
+
+.date-filters{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 20px;
+  gap: 10px;
+}
+.date-filters input[type="date"] {
+  padding: 5px 10px; /* Menor padding para hacer el campo más delgado */
+  font-size: 14px; /* Tamaño de fuente más pequeño */
+  border-radius: 20px; /* Bordes redondeados */
+  border: 1px solid #ccc; /* Borde fino */
+  max-width: 110px; /* Ajusta el ancho máximo */
+}
+
+/* Mejoras en responsive design */
+@media (max-width: 768px) {
+  .botones-container {
+    flex-direction: column;
+  }
+  button {
+    width: 100%;
+  }
+  
+  .date-filters {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+}
+.dashboard{
+  margin-top: 15px;
+}
+
+
+
 

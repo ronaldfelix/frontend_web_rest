@@ -3,10 +3,11 @@ import axios from 'axios';
 import Highcharts from 'highcharts';
 import HighchartsAccessibility from 'highcharts/modules/accessibility';
 import HighchartsReact from 'highcharts-react-official';
-import './main_screen.css';
+import './MainScreen.css';
+
 HighchartsAccessibility(Highcharts);
 
-const main_screen = () => {
+const MainScreen = () => {
   const [mozos, setMozos] = useState([]); // Lista de mozos
   const [reporte, setReporte] = useState(null); // Reporte a mostrar
   const [selectedMozo, setSelectedMozo] = useState(''); // Mozo seleccionado
@@ -192,9 +193,11 @@ const main_screen = () => {
       title: { text: `Reporte - Ventas`,},
       xAxis: { categories: fechas, // Usar las fechas agrupadas
         },
+      yAxis:{ title:{ text : 'Ventas en soles S/.'}},
       series: [{ name: 'Ventas', data: ventasTotales, // Usar los datos agrupados de ventas totales
           colorByPoint: true,},],
     };
+    
   } else if (currentView === 'platos') {
     chartOptions = {
       chart: { type: 'column' },
@@ -202,13 +205,10 @@ const main_screen = () => {
       xAxis: {
         categories: reporte.map((item) => item.nombrePlatillo),
       },
+      yAxis:{ title:{text:'Cantidad de pedidos'}},
       series: [
-        {
-          name: 'Cantidad Pedidos',
-          data: reporte.map((item) => item.cantidadPedidos),
-          colorByPoint: true,
-        },
-      ],
+        { name: 'Cantidad Pedidos', data: reporte.map((item) => item.cantidadPedidos),
+          colorByPoint: true,},],
     };
   }
     return (
@@ -286,14 +286,14 @@ const main_screen = () => {
             <option value="Bebida">Bebida</option>
           </select>
           <div className="date-filters">
-            <label htmlFor="fecha-inicio">Selecciona Fecha de Inicio:</label>
+            <label htmlFor="fecha-inicio">Selecciona Fecha Inicio:</label>
             <input 
               id="fecha-inicio"
               type="date" 
               value={fechaInicio} 
               onChange={(e) => setFechaInicio(e.target.value)} 
             />
-            <label htmlFor="fecha-fin">Selecciona Fecha de Fin:</label>
+            <label htmlFor="fecha-fin">Selecciona Fecha Fin:</label>
             <input 
               id="fecha-fin"
               type="date" 
@@ -312,6 +312,7 @@ const main_screen = () => {
 
       {renderReporte()}
     </div>
+    
   );
 };
-export default main_screen;
+export default MainScreen;
