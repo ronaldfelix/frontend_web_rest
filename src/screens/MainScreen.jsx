@@ -4,8 +4,10 @@ import Highcharts from 'highcharts';
 import HighchartsAccessibility from 'highcharts/modules/accessibility';
 import HighchartsReact from 'highcharts-react-official';
 import './MainScreen.css';
+import { useNavigate } from 'react-router-dom';
 
 HighchartsAccessibility(Highcharts);
+
 
 const MainScreen = () => {
   const [mozos, setMozos] = useState([]); // Lista de mozos
@@ -18,6 +20,10 @@ const MainScreen = () => {
   const [fechaInicio, setFechaInicio] = useState(''); // Fecha de inicio
   const [fechaFin, setFechaFin] = useState(''); // Fecha de fin
   const [categoriaAplicada, setCategoriaAplicada] = useState(''); // Nueva variable de estado
+
+  const navigate = useNavigate();
+  const handleIrANuevaVentana = () => {
+    navigate("/cocinero")};
 
   useEffect(() => {
     // Obtener la lista de mozos
@@ -271,6 +277,11 @@ const MainScreen = () => {
         <button type="button" className="btn" onClick={handleReporteVentas} disabled={loading}>
           <strong>Ver reporte de Ventas</strong>
         </button>
+
+        <button type="button" className="btn" onClick={handleIrANuevaVentana}>
+          <strong>Ver Cocinero</strong>
+        </button>
+
       </div>
 
       {/* Formulario para Filtrar por Categoria y Fecha */}
