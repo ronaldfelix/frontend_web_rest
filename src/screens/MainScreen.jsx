@@ -160,7 +160,7 @@ const MainScreen = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get('http://localhost:8080/api/reporte-ventas/intervalo', {
+      const response = await axios.get('http://localhost:8080/api/reportes/ventas', {
         params: {
           fechaInicio:"2024-10-01",
           fechaFin:"2024-10-11",
